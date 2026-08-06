@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Ocean World"
+description = "An immersive interactive underwater scene website. Visitors feel like they are submerged in the ocean, surrounded by seaweed, rocks, coral, seahorses, fish, and turtles that sway with mouse movement. Bubbles rise from the seafloor toward the surface."
+version = "1.0.0"
+id = "artifacts/ocean-world"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24917
+
+[services.development]
+run = "pnpm --filter @workspace/ocean-world run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/ocean-world", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/ocean-world/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24917"
+BASE_PATH = "/"
