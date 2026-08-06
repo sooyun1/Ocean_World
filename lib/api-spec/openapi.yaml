@@ -2,7 +2,7 @@ openapi: 3.1.0
 info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
-  version: 0.1.0
+  version: 0.2.0
   description: API specification
 servers:
   - url: /api
@@ -10,6 +10,10 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: users
+    description: User operations
+  - name: leaderboard
+    description: Leaderboard operations
 paths:
   /healthz:
     get:
@@ -24,6 +28,70 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /users/register:
+    post:
+      operationId: registerUser
+      tags: [users]
+      summary: Register a new user with a nickname
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserInput"
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+
+  /users/{userId}/pop:
+    post:
+      operationId: popBubble
+      tags: [users]
+      summary: Increment bubble pop count for a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Updated user profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /leaderboard:
+    get:
+      operationId: getLeaderboard
+      tags: [leaderboard]
+      summary: Get top 10 leaderboard and optional user rank
+      parameters:
+        - name: userId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Leaderboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LeaderboardResult"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +102,56 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    UserInput:
+      type: object
+      required: [nickname]
+      properties:
+        nickname:
+          type: string
+          minLength: 1
+          maxLength: 20
+
+    UserProfile:
+      type: object
+      required: [id, nickname, bubbleCount]
+      properties:
+        id:
+          type: number
+        nickname:
+          type: string
+        bubbleCount:
+          type: number
+
+    LeaderboardEntry:
+      type: object
+      required: [rank, id, nickname, bubbleCount]
+      properties:
+        rank:
+          type: number
+        id:
+          type: number
+        nickname:
+          type: string
+        bubbleCount:
+          type: number
+
+    LeaderboardResult:
+      type: object
+      required: [topTen]
+      properties:
+        topTen:
+          type: array
+          items:
+            $ref: "#/components/schemas/LeaderboardEntry"
+        myEntry:
+          oneOf:
+            - $ref: "#/components/schemas/LeaderboardEntry"
+            - type: "null"

@@ -6,6 +6,10 @@
  * OpenAPI spec version: 0.2.0
  */
 
-export interface HealthStatus {
-  status: string;
+export interface UserInput {
+  /**
+     * @minLength 1
+     * @maxLength 20
+     */
+  nickname: string;
 }

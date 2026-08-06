@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion';
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
+import { usePopBubble, getGetLeaderboardQueryKey } from '@workspace/api-client-react';
+import { useQueryClient } from '@tanstack/react-query';
 
 export function LightRays() {
   const rays = useMemo(() => Array.from({ length: 6 }).map((_, i) => ({
@@ -79,39 +81,93 @@ export function MarineSnow() {
   );
 }
 
-export function Bubbles() {
-  const bubbles = useMemo(() => Array.from({ length: 25 }).map((_, i) => ({
-    id: i,
+interface BubbleData {
+  id: number;
+  left: string;
+  size: number;
+  duration: number;
+  delay: number;
+  wobble: number;
+  popped: boolean;
+}
+
+interface BubblesProps {
+  currentUser: { id: number; nickname: string; bubbleCount: number } | null;
+  onPop?: () => void;
+}
+
+export function Bubbles({ currentUser, onPop }: BubblesProps) {
+  const [bubbles, setBubbles] = useState<BubbleData[]>([]);
+  const popMutation = usePopBubble();
+  const queryClient = useQueryClient();
+
+  const createBubble = (id: number): BubbleData => ({
+    id,
     left: `${Math.random() * 90 + 5}vw`,
-    size: Math.random() * 10 + 2,
+    size: Math.random() * 35 + 20, // 20px to 55px
     duration: Math.random() * 8 + 6,
     delay: Math.random() * -10,
-    wobble: Math.random() * 15 + 5
-  })), []);
+    wobble: Math.random() * 15 + 5,
+    popped: false
+  });
+
+  useEffect(() => {
+    // Initial bubbles
+    const initial = Array.from({ length: 20 }).map((_, i) => createBubble(i));
+    setBubbles(initial);
+  }, []);
+
+  const handlePop = (id: number) => {
+    if (!currentUser) return;
+    
+    setBubbles(prev => prev.map(b => b.id === id ? { ...b, popped: true } : b));
+    
+    popMutation.mutate({ userId: currentUser.id }, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: getGetLeaderboardQueryKey() });
+        if (onPop) onPop();
+      }
+    });
+
+    setTimeout(() => {
+      setBubbles(prev => {
+        const filtered = prev.filter(b => b.id !== id);
+        return [...filtered, createBubble(Date.now() + Math.random())];
+      });
+    }, 300);
+  };
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
       {bubbles.map((b) => (
         <motion.div
           key={b.id}
-          className="absolute rounded-full border border-white/40 bg-white/10"
+          className="absolute rounded-full border border-white/40 bg-white/10 flex items-center justify-center pointer-events-auto"
           style={{
             width: b.size,
             height: b.size,
             left: b.left,
+            cursor: currentUser ? 'pointer' : 'default',
           }}
-          initial={{ y: '110vh' }}
-          animate={{
+          initial={{ y: '110vh', scale: 1, opacity: 1 }}
+          animate={b.popped ? {
+            scale: 1.4,
+            opacity: 0,
+            transition: { duration: 0.2 }
+          } : {
             y: '-10vh',
             x: [0, b.wobble, -b.wobble, 0],
           }}
-          transition={{
+          transition={b.popped ? undefined : {
             y: { duration: b.duration, repeat: Infinity, ease: "linear", delay: b.delay },
             x: { duration: b.duration / 2, repeat: Infinity, ease: "easeInOut", delay: b.delay }
           }}
+          onClick={() => {
+            if (!b.popped) handlePop(b.id);
+          }}
         >
           {/* Highlight to make it look like a bubble */}
-          <div className="absolute top-[15%] left-[20%] w-[30%] h-[30%] bg-white/60 rounded-full" />
+          <div className="absolute top-[15%] left-[20%] w-[30%] h-[30%] bg-white/60 rounded-full pointer-events-none" />
         </motion.div>
       ))}
     </div>

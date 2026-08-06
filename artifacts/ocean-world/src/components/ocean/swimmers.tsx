@@ -123,14 +123,14 @@ export function HoveringSeahorse({
   delay = 0,
   driftDuration = 15
 }) {
-  const url = 'https://www.nationalgeographic.com/animals/fish/facts/seahorse';
+  const url = 'https://www.nationalgeographic.com/animals/fish/facts/seahorses';
   
   return (
     <motion.div
       className="absolute"
       style={{ left: x, top: y, scale, cursor: 'pointer' }}
       onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
-      whileHover={{ scale: 1.05, filter: "drop-shadow(0 0 8px rgba(100,200,255,0.6))" }}
+      whileHover={{ scale: 1.08, filter: "drop-shadow(0 0 8px rgba(100,200,255,0.6))" }}
       animate={{ 
         y: ['0vh', '-5vh', '2vh', '0vh'],
         x: ['0vw', '3vw', '-2vw', '0vw']

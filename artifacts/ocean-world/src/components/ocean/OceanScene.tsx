@@ -5,19 +5,34 @@ import { CurrentLayer, SwayLayer } from './layers';
 import { LightRays, MarineSnow, Bubbles } from './ambient';
 import { FishSchool, SolitaryFish, SwimmingTurtle, HoveringSeahorse, DriftingJellyfish } from './swimmers';
 import { SeafloorBase, StaghornCoral, BrainCoral, FanCoral, TubeCoral, SeaweedCluster } from './flora';
+import Leaderboard from './Leaderboard';
 
-export default function OceanScene() {
+const CORAL_URLS = [
+  "https://www.nationalgeographic.com/animals/invertebrates/facts/coral",
+  "https://www.nationalgeographic.com/environment/oceans/reference/coral-reefs-explained",
+  "https://www.nationalgeographic.com/science/article/corals"
+];
+
+const openCoralLink = () => {
+  window.open(CORAL_URLS[Math.floor(Math.random() * CORAL_URLS.length)], "_blank", "noopener,noreferrer");
+};
+
+interface OceanUser {
+  id: number;
+  nickname: string;
+  bubbleCount: number;
+}
+
+export default function OceanScene({ currentUser }: { currentUser: OceanUser | null }) {
   const { currentX, currentY } = useMouseCurrent();
   const [soundEnabled, setSoundEnabled] = useState(false);
   
   useOceanSound(soundEnabled);
 
-  const handleCoralClick = () => {
-    window.open('https://www.nationalgeographic.com/environment/oceans/reference/coral-reefs-explained', '_blank', 'noopener,noreferrer');
-  };
-
   return (
-    <div className="ocean-bg">
+    <div className="ocean-bg relative overflow-hidden h-[100dvh] w-full">
+      <Leaderboard currentUser={currentUser} />
+      
       <LightRays />
       <MarineSnow />
       
@@ -52,19 +67,19 @@ export default function OceanScene() {
         <FishSchool type="elongated" scale={1.0} y="80vh" duration={42} color="#e9c46a" delay={30} />
       </CurrentLayer>
 
-      <Bubbles />
+      <Bubbles currentUser={currentUser} />
 
       {/* ---------------- SEAFLOOR (Extends beyond edges to hide scrolling) ---------------- */}
       <CurrentLayer currentX={currentX} currentY={currentY} depth={0.2} rotateMultiplier={0} className="absolute bottom-[-5vh] left-[-15vw] w-[130vw] h-[30vh]">
         <SeafloorBase />
         
         {/* Left cluster */}
-        <div className="absolute bottom-[20%] left-[20%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+        <div className="absolute bottom-[20%] left-[20%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={openCoralLink} style={{ cursor: 'pointer' }}>
           <SwayLayer currentX={currentX} multiplier={0.08}>
             <StaghornCoral />
           </SwayLayer>
         </div>
-        <div className="absolute bottom-[10%] left-[25%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+        <div className="absolute bottom-[10%] left-[25%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={openCoralLink} style={{ cursor: 'pointer' }}>
           <SwayLayer currentX={currentX} multiplier={0.05}>
             <BrainCoral />
           </SwayLayer>
@@ -74,14 +89,14 @@ export default function OceanScene() {
         </div>
 
         {/* Center-left cluster */}
-        <div className="absolute bottom-[25%] left-[40%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+        <div className="absolute bottom-[25%] left-[40%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={openCoralLink} style={{ cursor: 'pointer' }}>
           <SwayLayer currentX={currentX} multiplier={0.06}>
             <TubeCoral />
           </SwayLayer>
         </div>
 
         {/* Center-right cluster */}
-        <div className="absolute bottom-[15%] left-[65%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+        <div className="absolute bottom-[15%] left-[65%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={openCoralLink} style={{ cursor: 'pointer' }}>
           <SwayLayer currentX={currentX} multiplier={0.07}>
             <FanCoral />
           </SwayLayer>
@@ -91,12 +106,12 @@ export default function OceanScene() {
         </div>
 
         {/* Right cluster */}
-        <div className="absolute bottom-[10%] left-[85%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+        <div className="absolute bottom-[10%] left-[85%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={openCoralLink} style={{ cursor: 'pointer' }}>
           <SwayLayer currentX={currentX} multiplier={0.05}>
             <BrainCoral />
           </SwayLayer>
         </div>
-        <div className="absolute bottom-[30%] left-[88%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+        <div className="absolute bottom-[30%] left-[88%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={openCoralLink} style={{ cursor: 'pointer' }}>
           <SwayLayer currentX={currentX} multiplier={0.09}>
             <StaghornCoral />
           </SwayLayer>
