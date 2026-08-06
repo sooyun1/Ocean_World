@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import useOceanSound from '@/hooks/use-ocean-sound';
 import { useMouseCurrent } from '@/hooks/use-mouse-current';
 import { CurrentLayer, SwayLayer } from './layers';
 import { LightRays, MarineSnow, Bubbles } from './ambient';
@@ -6,6 +8,13 @@ import { SeafloorBase, StaghornCoral, BrainCoral, FanCoral, TubeCoral, SeaweedCl
 
 export default function OceanScene() {
   const { currentX, currentY } = useMouseCurrent();
+  const [soundEnabled, setSoundEnabled] = useState(false);
+  
+  useOceanSound(soundEnabled);
+
+  const handleCoralClick = () => {
+    window.open('https://www.nationalgeographic.com/environment/oceans/reference/coral-reefs-explained', '_blank', 'noopener,noreferrer');
+  };
 
   return (
     <div className="ocean-bg">
@@ -18,6 +27,8 @@ export default function OceanScene() {
         <SolitaryFish scale={0.4} y="55vh" duration={85} color="#2a9d8f" delay={30} reverse />
         <DriftingJellyfish scale={0.6} x="75vw" y="35vh" delay={5} />
         <FishSchool type="elongated" scale={0.6} y="20vh" duration={60} color="#104a5a" reverse />
+        <FishSchool type="round" scale={0.45} y="70vh" duration={80} color="#2a9d8f" delay={20} />
+        <SolitaryFish scale={0.6} y="15vh" duration={95} color="#e9c46a" delay={12} reverse />
       </CurrentLayer>
 
       {/* ---------------- MIDGROUND LAYER ---------------- */}
@@ -27,6 +38,8 @@ export default function OceanScene() {
         <HoveringSeahorse scale={0.6} x="15vw" y="60vh" driftDuration={15} />
         <HoveringSeahorse scale={0.5} x="85vw" y="50vh" driftDuration={18} delay={5} />
         <DriftingJellyfish scale={0.8} x="40vw" y="65vh" delay={2} />
+        <SwimmingTurtle scale={0.9} y="70vh" duration={100} delay={20} />
+        <FishSchool type="round" scale={0.7} y="55vh" duration={50} color="#2a9d8f" delay={25} reverse />
       </CurrentLayer>
 
       {/* ---------------- FOREGROUND LAYER ---------------- */}
@@ -35,6 +48,8 @@ export default function OceanScene() {
         <SwimmingTurtle scale={1.1} y="60vh" duration={65} delay={35} reverse />
         <HoveringSeahorse scale={0.8} x="60vw" y="80vh" driftDuration={12} delay={8} />
         <DriftingJellyfish scale={1.1} x="20vw" y="45vh" delay={12} />
+        <SwimmingTurtle scale={1.3} y="35vh" duration={75} delay={15} reverse />
+        <FishSchool type="elongated" scale={1.0} y="80vh" duration={42} color="#e9c46a" delay={30} />
       </CurrentLayer>
 
       <Bubbles />
@@ -44,36 +59,48 @@ export default function OceanScene() {
         <SeafloorBase />
         
         {/* Left cluster */}
-        <SwayLayer currentX={currentX} multiplier={0.08} className="absolute bottom-[20%] left-[20%]">
-          <StaghornCoral />
-        </SwayLayer>
-        <SwayLayer currentX={currentX} multiplier={0.05} className="absolute bottom-[10%] left-[25%]">
-          <BrainCoral />
-        </SwayLayer>
+        <div className="absolute bottom-[20%] left-[20%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+          <SwayLayer currentX={currentX} multiplier={0.08}>
+            <StaghornCoral />
+          </SwayLayer>
+        </div>
+        <div className="absolute bottom-[10%] left-[25%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+          <SwayLayer currentX={currentX} multiplier={0.05}>
+            <BrainCoral />
+          </SwayLayer>
+        </div>
         <div className="absolute bottom-[30%] left-[15%]">
           <SeaweedCluster currentX={currentX} />
         </div>
 
         {/* Center-left cluster */}
-        <SwayLayer currentX={currentX} multiplier={0.06} className="absolute bottom-[25%] left-[40%]">
-          <TubeCoral />
-        </SwayLayer>
+        <div className="absolute bottom-[25%] left-[40%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+          <SwayLayer currentX={currentX} multiplier={0.06}>
+            <TubeCoral />
+          </SwayLayer>
+        </div>
 
         {/* Center-right cluster */}
-        <SwayLayer currentX={currentX} multiplier={0.07} className="absolute bottom-[15%] left-[65%]">
-          <FanCoral />
-        </SwayLayer>
+        <div className="absolute bottom-[15%] left-[65%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+          <SwayLayer currentX={currentX} multiplier={0.07}>
+            <FanCoral />
+          </SwayLayer>
+        </div>
         <div className="absolute bottom-[20%] left-[70%]">
           <SeaweedCluster currentX={currentX} />
         </div>
 
         {/* Right cluster */}
-        <SwayLayer currentX={currentX} multiplier={0.05} className="absolute bottom-[10%] left-[85%]">
-          <BrainCoral />
-        </SwayLayer>
-        <SwayLayer currentX={currentX} multiplier={0.09} className="absolute bottom-[30%] left-[88%]">
-          <StaghornCoral />
-        </SwayLayer>
+        <div className="absolute bottom-[10%] left-[85%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+          <SwayLayer currentX={currentX} multiplier={0.05}>
+            <BrainCoral />
+          </SwayLayer>
+        </div>
+        <div className="absolute bottom-[30%] left-[88%] hover:drop-shadow-[0_0_8px_rgba(100,200,255,0.5)] transition-all z-10" onClick={handleCoralClick} style={{ cursor: 'pointer' }}>
+          <SwayLayer currentX={currentX} multiplier={0.09}>
+            <StaghornCoral />
+          </SwayLayer>
+        </div>
       </CurrentLayer>
 
       {/* Foreground blurry kelp (extreme depth) */}
@@ -89,7 +116,29 @@ export default function OceanScene() {
       </CurrentLayer>
 
       {/* Vignette on top of everything */}
-      <div className="vignette" />
+      <div className="vignette pointer-events-none" />
+
+      {/* Sound Toggle Button */}
+      <button
+        onClick={() => setSoundEnabled(prev => !prev)}
+        title="Toggle ocean sounds"
+        className="fixed bottom-6 right-6 z-50 rounded-full w-12 h-12 flex items-center justify-center bg-[#00142899] backdrop-blur-sm border border-white/20 hover:bg-white/10 transition-colors"
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          {soundEnabled ? (
+            <>
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+            </>
+          ) : (
+            <>
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="1" x2="1" y2="23"></line>
+            </>
+          )}
+        </svg>
+      </button>
     </div>
   );
 }

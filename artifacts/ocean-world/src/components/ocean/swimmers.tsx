@@ -29,12 +29,16 @@ export function FishSchool({
     wobbleDelay: Math.random() * 2
   })), [count]);
 
+  const url = 'https://www.nationalgeographic.com/animals/fish/facts/clownfish';
+  
   return (
     <motion.div
       className="absolute"
-      style={{ top: y, left: reverse ? '120vw' : '-20vw', scaleX: reverse ? -scale : scale, scaleY: scale }}
+      style={{ top: y, left: reverse ? '120vw' : '-20vw', scaleX: reverse ? -scale : scale, scaleY: scale, cursor: 'pointer' }}
       animate={{ x: reverse ? ['0vw', '-150vw'] : ['0vw', '150vw'] }}
       transition={{ duration, repeat: Infinity, ease: "linear", delay }}
+      onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
+      whileHover={{ scale: 1.02 }}
     >
       {fishPositions.map((p, i) => (
         <motion.div 
@@ -59,10 +63,14 @@ export function SolitaryFish({
   color = "#e9c46a", 
   reverse = false 
 }) {
+  const url = 'https://www.nationalgeographic.com/animals/fish/facts/clownfish';
+  
   return (
     <motion.div
       className="absolute"
-      style={{ top: y, left: reverse ? '120vw' : '-20vw', scaleX: reverse ? -scale : scale, scaleY: scale }}
+      style={{ top: y, left: reverse ? '120vw' : '-20vw', scaleX: reverse ? -scale : scale, scaleY: scale, cursor: 'pointer' }}
+      onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
+      whileHover={{ scale: 1.05, filter: "drop-shadow(0 0 8px rgba(100,200,255,0.6))" }}
       animate={{ 
         x: reverse ? ['0vw', '-150vw'] : ['0vw', '150vw'],
         y: ['0vh', '10vh', '-5vh', '0vh']
@@ -84,10 +92,14 @@ export function SwimmingTurtle({
   delay = 0, 
   reverse = false 
 }) {
+  const url = 'https://www.nationalgeographic.com/animals/reptiles/facts/sea-turtles';
+  
   return (
     <motion.div
       className="absolute"
-      style={{ top: y, left: reverse ? '120vw' : '-20vw', scaleX: reverse ? -scale : scale, scaleY: scale }}
+      style={{ top: y, left: reverse ? '120vw' : '-20vw', scaleX: reverse ? -scale : scale, scaleY: scale, cursor: 'pointer' }}
+      onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
+      whileHover={{ scale: 1.05, filter: "drop-shadow(0 0 8px rgba(100,200,255,0.6))" }}
       animate={{ 
         x: reverse ? ['0vw', '-150vw'] : ['0vw', '150vw'],
         y: ['0vh', '-10vh', '5vh', '0vh'],
@@ -111,10 +123,14 @@ export function HoveringSeahorse({
   delay = 0,
   driftDuration = 15
 }) {
+  const url = 'https://www.nationalgeographic.com/animals/fish/facts/seahorse';
+  
   return (
     <motion.div
       className="absolute"
-      style={{ left: x, top: y, scale }}
+      style={{ left: x, top: y, scale, cursor: 'pointer' }}
+      onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
+      whileHover={{ scale: 1.05, filter: "drop-shadow(0 0 8px rgba(100,200,255,0.6))" }}
       animate={{ 
         y: ['0vh', '-5vh', '2vh', '0vh'],
         x: ['0vw', '3vw', '-2vw', '0vw']
@@ -135,10 +151,14 @@ export function DriftingJellyfish({
   y = "50vh",
   delay = 0
 }) {
+  const url = 'https://www.nationalgeographic.com/animals/invertebrates/facts/jellyfish';
+  
   return (
     <motion.div
       className="absolute"
-      style={{ left: x, top: y, scale }}
+      style={{ left: x, top: y, scale, cursor: 'pointer' }}
+      onClick={() => window.open(url, '_blank', 'noopener,noreferrer')}
+      whileHover={{ scale: 1.05, filter: "drop-shadow(0 0 8px rgba(100,200,255,0.6))" }}
       animate={{ 
         y: ['0vh', '-20vh', '0vh'],
         x: ['0vw', '5vw', '-5vw', '0vw']

@@ -22,6 +22,25 @@ export function useMouseCurrent() {
       targetMouseX.current = e.clientX;
       targetMouseY.current = e.clientY;
     };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      if (lastMouseX.current === null) {
+        lastMouseX.current = touch.clientX;
+        lastMouseY.current = touch.clientY;
+      }
+      targetMouseX.current = touch.clientX;
+      targetMouseY.current = touch.clientY;
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      const t = e.touches[0];
+      lastMouseX.current = t.clientX;
+      lastMouseY.current = t.clientY;
+      targetMouseX.current = t.clientX;
+      targetMouseY.current = t.clientY;
+    };
     
     // Set initial mouse pos to center of screen to avoid weird jumps
     lastMouseX.current = window.innerWidth / 2;
@@ -30,7 +49,13 @@ export function useMouseCurrent() {
     targetMouseY.current = window.innerHeight / 2;
 
     window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchstart', handleTouchStart);
+    };
   }, []);
 
   useAnimationFrame(() => {
